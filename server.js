@@ -33,7 +33,7 @@ connectDB();
 // CORS Configuration (Adjust origin to match your current frontend port, e.g., 5174)
 const corsOptions = {
   origin: [
-    "http://localhost:5173",
+    "https://wbcfrontend.vercel.app/",
     "http://127.0.0.1:5173",
     "http://localhost:5174",
     "http://127.0.0.1:5174",
