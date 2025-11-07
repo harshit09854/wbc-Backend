@@ -16,6 +16,7 @@ import sellerRoutes from "./routes/sellerRoutes.js";
 import buyerRoutes from "./routes/buyerRoutes.js";
 import productRoutes from "./routes/ProductRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
+import memberRoute from "./routes/memberRoute.js";
 
 dotenv.config();
 const app = express();
@@ -54,7 +55,7 @@ app.use("/api/seller", sellerRoutes);
 app.use("/api/buyer", buyerRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
-
+app.use("/api/member",memberRoute)
 // =======================================================
 // 4. SERVER START
 // =======================================================

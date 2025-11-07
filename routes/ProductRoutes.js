@@ -5,7 +5,7 @@ import { authenticateToken } from "../middleware/authMiddleware.js";
 const router = express.Router();
 
 // ✅ Public route (anyone can see all products)
-router.get("/", productController.getAllProducts);
+router.get("/",  productController.getAllProducts);
 
 // ✅ Seller routes (require authentication)
 router.post("/add", authenticateToken, productController.addProduct);
