@@ -184,7 +184,7 @@ const deleteProduct = async (req, res) => {
   console.log(sellerId)
   try {
     const products = await productModel.find({ seller: sellerId });
-    if (products.length === 0) {
+    if (products.length === 0) {x
       return res
         .status(404)
         .json({ message: "No products found for this seller" });
