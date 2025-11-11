@@ -34,10 +34,11 @@ connectDB();
 // CORS Configuration (Adjust origin to match your current frontend port, e.g., 5174)
 const corsOptions = {
   origin: [
-    "https://wbcfrontend.vercel.app/",
+    // "https://wbcfrontend.vercel.app/",
     "http://127.0.0.1:5173",
     "http://localhost:5174",
     "http://127.0.0.1:5174",
+    "http://localhost:5173",
   ],
   credentials: true,
   methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
@@ -56,6 +57,7 @@ app.use("/api/buyer", buyerRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/member",memberRoute)
+app.use("/api/showSellerProds", productRoutes); // Added route for showing seller products
 // =======================================================
 // 4. SERVER START
 // =======================================================

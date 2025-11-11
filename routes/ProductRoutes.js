@@ -17,5 +17,6 @@ router.delete(
   authenticateToken,
   productController.deleteProduct
 );
+router.get("/:sellerId", productController.getProductsBySeller);
 
 export default router;

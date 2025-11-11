@@ -99,6 +99,7 @@ const buyerLogin = async (req, res) => {
 const buyerDashboard = async (req, res) => {
   const buyerId = req.user.id;
   console.log("buyer dashboard");
+  
   try {
     const buyerData = await buyerModel.findById(buyerId).select("-password"); // Exclude password
     if (!buyerData) {

@@ -8,6 +8,5 @@ const sellerMember = async (req, res) => {
     res.status(200).json({message: "All Sellers", sellers: allSellers});
 }
 
-export {
-    sellerMember
-}
+export default {sellerMember};
+

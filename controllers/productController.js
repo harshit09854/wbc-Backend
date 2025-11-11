@@ -178,6 +178,33 @@ const deleteProduct = async (req, res) => {
     
   };
 
+ const getProductsBySeller = async (req, res) => {
+  const sellerId = req.params.sellerId;
+  console.log("single product detail")
+  console.log(sellerId)
+  try {
+    const products = await productModel.find({ seller: sellerId });
+    if (products.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No products found for this seller" });
+    }
+    res
+      .status(200)
+      .json({
+        message: "Seller's products fetched successfully",
+        count: products.length,
+        products,
+      });
+  } catch (error) {
+    res
+      .status(500)
+      .json({
+        message: "Failed to fetch seller products",
+        error: error.message,
+      });
+  }
+};
 export default {
   addProduct,
   getSellerProducts,
@@ -185,4 +212,5 @@ export default {
   getProductDetails,
   updateProduct,
   deleteProduct,
+  getProductsBySeller,
 };
