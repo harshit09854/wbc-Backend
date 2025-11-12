@@ -10,6 +10,7 @@ const sellerSchema = new mongoose.Schema({
     businessDescription: { type: String, required: false },
     pincode: { type: String, required: true },
     isVerified: { type: Boolean, default: false }, 
+    profileImage:{type:String,required:true},
     qr:{type:String,required:true}
     // Admin verification ke liye
     // Aur koi seller specific field jaise bank details

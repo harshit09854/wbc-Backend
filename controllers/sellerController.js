@@ -7,72 +7,73 @@ import productModel from "../models/Product.js";
 // Seller Signup
 const sellerSignup = async (req, res) => {
   const role = "seller";
-  // **FIX 5: Added 'phone' and 'businessType' to destructuring**
+  console.log("Signup request received");
+
   const {
     email,
     password,
     name,
-    phone, // <-- ADDED
+    phone,
     businessName,
-    businessType, // <-- ADDED
+    businessType,
     businessAddress,
     businessDescription,
     pincode,
   } = req.body;
 
-  // **NOTE:** The 'qr' field is NOT in req.body.
-  // Your file upload middleware (like Multer) puts it in 'req.file'.
-  // Your code already correctly uses req.file.filename, which is good.
+  console.log("Request body:", req.body);
+  console.log("Files received:", req.files);
 
-  // Check if file was uploaded
-  if (!req.file) {
-    return res.status(400).json({ message: "QR Code image is required." });
+  // Access files correctly when using upload.fields()
+  const qrFile = req.files?.qr?.[0];
+  const profileFile = req.files?.profileImage?.[0];
+
+  if (!qrFile || !profileFile) {
+    return res.status(400).json({ message: "Both QR and Profile Image are required" });
   }
 
-  console.log("--- Cloudinary Upload Successful ---");
-  console.log("Secure URL:", req.file.path); // Use this for Cloudinary
-  console.log("Public ID:", req.file.filename); // Use this for local storage/filename
-  console.log("------------------------------------");
-  console.log("Received body:", req.body);
+  console.log("QR File:", qrFile.path);
+  console.log("Profile File:", profileFile.path);
 
   try {
     const existingSeller = await sellerModel.findOne({ email });
     if (existingSeller) {
       return res.status(400).json({ message: "Seller already exists" });
     }
+
     const hashedPassword = await bcrypt.hash(password, 10);
+
     const newSeller = new sellerModel({
       email,
       password: hashedPassword,
       name,
-      phone, // <-- ADDED (Make sure your sellerModel has this field)
+      phone,
       businessName,
-      businessType, // <-- ADDED (Make sure your sellerModel has this field)
+      businessType,
       businessAddress,
       businessDescription,
       pincode,
 
-      // Use the path from Cloudinary or the filename if storing locally
-      // Assuming you use the filename/public_id:
-      qr: req.file.filename,
+      // Use the path from Cloudinary or multer's file object
+      qr: qrFile.path,           // <-- changed from req.file.filename
+      profileImage: profileFile.path,  // <-- changed from req.file.filename
     });
 
     await newSeller.save();
-
+    console.log("New seller created:", newSeller);
     const token = jwt.sign({ id: newSeller._id, role: role }, JWT_SECRET, {
       expiresIn: "1h",
     });
 
     console.log("Token:", token);
 
-    res
-      .status(201)
-      .json({ message: "Seller registered successfully", token, role: role });
+    res.status(201).json({ message: "Seller registered successfully", token, role });
   } catch (error) {
-    console.error("Server signup error:", error); // Log the full error
+    console.error("Server signup error:", error);
     res.status(500).json({ message: "Server error" });
   }
 };
+
 
 // Seller Login
 const sellerLogin = async (req, res) => {

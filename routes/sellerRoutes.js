@@ -6,7 +6,25 @@ import productController from "../controllers/productController.js";
 import orderController from "../controllers/orderController.js";
 import uploadCloud from "../config/cloudinaryConfig.js";
 // Seller ke routes alag
-router.post("/signup", uploadCloud.single("qr"), sellerController.sellerSignup);
+router.post(
+  "/signup",
+  (req, res, next) => {
+    console.log("Incoming signup request");
+    next();
+  },
+  uploadCloud.fields([
+    { name: "qr", maxCount: 1 },
+    { name: "profileImage", maxCount: 1 },
+  ]),
+  (req, res, next) => {
+    console.log("Files:", req.files);
+    console.log("Body:", req.body);
+    next();
+  },
+  sellerController.sellerSignup
+);
+
+
 router.post("/login", sellerController.sellerLogin);
 
 // 1. SELLER PROFILE ROUTE (Basic Info)
