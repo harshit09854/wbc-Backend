@@ -6,7 +6,7 @@ const router = express.Router();
 
 
 router.get('/', memberController.sellerMember);
-
+router.get('/:sellerId', memberController.sellerMemberById);
 
 export default router;
 
