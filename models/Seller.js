@@ -11,7 +11,7 @@ const sellerSchema = new mongoose.Schema({
     pincode: { type: String, required: true },
     isVerified: { type: Boolean, default: false }, 
     profileImage:{type:String,required:true},
-    qr:{type:String,required:true}
+    qr:{type:String,required:false}
     // Admin verification ke liye
     // Aur koi seller specific field jaise bank details
 });
