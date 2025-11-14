@@ -28,11 +28,11 @@ const sellerSignup = async (req, res) => {
   const qrFile = req.files?.qr?.[0];
   const profileFile = req.files?.profileImage?.[0];
 
-  if (!qrFile || !profileFile) {
+  if ( !profileFile) {
     return res.status(400).json({ message: "Both QR and Profile Image are required" });
   }
 
-  console.log("QR File:", qrFile.path);
+  // console.log("QR File:", qrFile.path);
   console.log("Profile File:", profileFile.path);
 
   try {
@@ -55,7 +55,7 @@ const sellerSignup = async (req, res) => {
       pincode,
 
       // Use the path from Cloudinary or multer's file object
-      qr: qrFile.path,           // <-- changed from req.file.filename
+      // qr: qrFile.path,           // <-- changed from req.file.filename
       profileImage: profileFile.path,  // <-- changed from req.file.filename
     });
 

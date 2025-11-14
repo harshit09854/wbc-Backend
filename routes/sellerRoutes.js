@@ -13,7 +13,7 @@ router.post(
     next();
   },
   uploadCloud.fields([
-    { name: "qr", maxCount: 1 },
+    // { name: "qr", maxCount: 1 },
     { name: "profileImage", maxCount: 1 },
   ]),
   (req, res, next) => {
