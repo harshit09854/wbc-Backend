@@ -29,7 +29,7 @@ const authenticateToken = (req, res, next) => {
     jwt.verify(token, JWT_SECRET_VERIFY_SELLER, (errSeller, sellerUser) => {
         
         if (errSeller) {
-            console.log("mei hu buyer");
+            // console.log("mei hu buyer");
             // 2. If Seller verification fails, try Buyer Secret
             jwt.verify(token, JWT_SECRET_VERIFY_BUYER, (errBuyer, buyerUser) => {
                 if (errBuyer) {
