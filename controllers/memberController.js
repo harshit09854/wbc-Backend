@@ -11,6 +11,7 @@ const sellerMember = async (req, res) => {
 const sellerMemberById = async (req, res) => {
     const sellerId = req.params.sellerId;
     const seller = await sellerModel.findById(sellerId);
+    console.log(seller);
     if (!seller) {
         return res.status(404).json({message: "Seller not found"});
     }
