@@ -14,7 +14,7 @@ const JWT_SECRET = process.env.JWT_SECRET_BUYER || "meihubuyer";
 // --------------------------------------------------------
 const buyerSignup = async (req, res) => {
   const { name, email, password, phone, confirmPassword } = req.body;
-
+  console.log("buyer Signup")
   try {
     if (password !== confirmPassword) {
       return res.status(400).json({ message: "Passwords do not match" });
@@ -57,6 +57,7 @@ const buyerSignup = async (req, res) => {
 // --------------------------------------------------------
 const buyerLogin = async (req, res) => {
   const { email, password } = req.body;
+  console.log("Buyer Login")
   console.log(email, password);
   try {
     const buyer = await buyerModel.findOne({ email });
@@ -130,6 +131,7 @@ const buyerLogout = (req, res) => {
 // --------------------------------------------------------
 const getWishlistItems = async (req, res) => {
   const buyerId = req.user.id;
+  
   try {
     const buyer = await buyerModel.findById(buyerId);
 
