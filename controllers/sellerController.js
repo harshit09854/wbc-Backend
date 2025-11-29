@@ -155,7 +155,7 @@ const getSellerProfile = async (req, res) => {
     const sellerProfile = await sellerModel
       .findById(sellerId)
       .select(
-        "name email businessName businessAddress businessDescription pincode"
+        "name email businessName businessAddress businessDescription pincode phone"
       );
 
     if (!sellerProfile) {
@@ -174,6 +174,56 @@ const getSellerProfile = async (req, res) => {
     });
   }
 };
+
+
+
+const updateProfile = async(req,res) =>{
+  const sellerId = req.user.id;
+  const { name, phone, businessName, businessAddress, businessDescription, pincode } = req.body;
+
+  try {
+    // Validate that at least one field is provided for update
+    if (!name && !phone && !businessName && !businessAddress && !businessDescription && !pincode) {
+      return res.status(400).json({ message: "At least one field is required to update" });
+    }
+
+    // Build update object with only provided fields
+    const updateData = {};
+    if (name) updateData.name = name;
+    if (phone) updateData.phone = phone;
+    if (businessName) updateData.businessName = businessName;
+    if (businessAddress) updateData.businessAddress = businessAddress;
+    if (businessDescription) updateData.businessDescription = businessDescription;
+    if (pincode) updateData.pincode = pincode;
+
+    // Handle profile image if provided
+    if (req.file) {
+      updateData.profileImage = req.file.path;
+    }
+
+    // Update the seller profile
+    const updatedSeller = await sellerModel.findByIdAndUpdate(
+      sellerId,
+      updateData,
+      { new: true, runValidators: true }
+    ).select("name email businessName businessAddress businessDescription pincode phone profileImage");
+
+    if (!updatedSeller) {
+      return res.status(404).json({ message: "Seller not found" });
+    }
+
+    res.status(200).json({
+      message: "Profile updated successfully",
+      profile: updatedSeller
+    });
+  } catch (error) {
+    console.error("Update Profile Error:", error);
+    res.status(500).json({
+      message: "Failed to update profile",
+      error: error.message
+    });
+  }
+}
 // const getSellerDashboardStats = async (req, res) => {
 //   const sellerId = req.user.id;
 
@@ -265,7 +315,8 @@ export default {
   sellerLogin,
   getSellerProfile,
   sellerDashboard,
-  getSellerProducts, // <-- Add it here
+  getSellerProducts,
+  updateProfile
 };
 
 // export default { sellerSignup, sellerLogin, getSellerProfile, sellerDashboard };

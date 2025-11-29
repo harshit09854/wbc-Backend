@@ -35,6 +35,7 @@ router.get(
   isSeller,
   sellerController.getSellerProfile
 );
+router.post("/update-profile",authenticateToken,isSeller,sellerController.updateProfile)
 
 // 2. SELLER DASHBOARD STATS ROUTE (Analytics)
 // URL: /api/seller/dashboard
@@ -92,6 +93,7 @@ router.get(
   isSeller,
   orderController.getSellerOrders
 );
+
 
 // 2. Order ka status update karna
 // URL: /api/seller/order/:orderId/status
