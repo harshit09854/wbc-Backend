@@ -43,6 +43,11 @@ router.post(
   sellerController.updateProfile
 );
 
+// 1.1 PASSWORD MANAGEMENT
+router.post("/change-password", authenticateToken, isSeller, sellerController.changePassword);
+router.post("/forgot-password", sellerController.forgotPassword);
+router.post("/reset-password", sellerController.resetPassword);
+
 // 2. SELLER DASHBOARD STATS ROUTE (Analytics)
 // URL: /api/seller/dashboard
 

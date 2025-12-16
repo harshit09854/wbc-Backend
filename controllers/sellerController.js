@@ -224,6 +224,70 @@ const updateProfile = async(req,res) =>{
     });
   }
 }
+
+// Change Password (Logged In User)
+const changePassword = async (req, res) => {
+  const { currentPassword, newPassword } = req.body;
+  const sellerId = req.user.id;
+
+  try {
+    const seller = await sellerModel.findById(sellerId);
+    if (!seller) return res.status(404).json({ message: "Seller not found" });
+
+    const isMatch = await bcrypt.compare(currentPassword, seller.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Incorrect current password" });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    seller.password = hashedPassword;
+    await seller.save();
+
+    res.status(200).json({ message: "Password updated successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+// Forgot Password (Public - Generates Token)
+const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+  try {
+    const seller = await sellerModel.findOne({ email });
+    if (!seller) return res.status(404).json({ message: "Seller not found" });
+
+    // Generate a reset token valid for 15 minutes
+    const resetToken = jwt.sign({ id: seller._id }, JWT_SECRET, { expiresIn: "15m" });
+
+    // In a real application, send this link via Email (Nodemailer)
+    const resetLink = `http://localhost:5173/seller/reset-password/${resetToken}`;
+    console.log(`[DEV] Password Reset Link for ${email}: ${resetLink}`);
+
+    res.status(200).json({ message: "Password reset link sent to email (Check console)", resetToken });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+// Reset Password (Public - Uses Token)
+const resetPassword = async (req, res) => {
+  const { token, newPassword } = req.body;
+  try {
+    const decoded = jwt.verify(token, JWT_SECRET);
+    const seller = await sellerModel.findById(decoded.id);
+    
+    if (!seller) return res.status(404).json({ message: "Invalid token or user not found" });
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    seller.password = hashedPassword;
+    await seller.save();
+
+    res.status(200).json({ message: "Password reset successfully" });
+  } catch (error) {
+    res.status(400).json({ message: "Invalid or expired token" });
+  }
+};
+
 // const getSellerDashboardStats = async (req, res) => {
 //   const sellerId = req.user.id;
 
@@ -316,7 +380,10 @@ export default {
   getSellerProfile,
   sellerDashboard,
   getSellerProducts,
-  updateProfile
+  updateProfile,
+  changePassword,
+  forgotPassword,
+  resetPassword
 };
 
 // export default { sellerSignup, sellerLogin, getSellerProfile, sellerDashboard };

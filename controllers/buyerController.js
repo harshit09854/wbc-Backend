@@ -163,6 +163,29 @@ const payment = async (req, res) => {
     console.log(err);
   }
 };
+
+// --------------------------------------------------------
+// 7. UPDATE BUYER PROFILE
+// --------------------------------------------------------
+const updateBuyerProfile = async (req, res) => {
+  const buyerId = req.user.id;
+  const { name, phone, address } = req.body;
+
+  try {
+    const updatedBuyer = await buyerModel.findByIdAndUpdate(
+      buyerId,
+      { name, phone, address },
+      { new: true, runValidators: true }
+    ).select("-password");
+
+    if (!updatedBuyer) return res.status(404).json({ message: "Buyer not found" });
+
+    res.status(200).json({ message: "Profile updated successfully", user: updatedBuyer });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to update profile", error: error.message });
+  }
+};
+
 // --------------------------------------------------------
 // 6. EXPORT THE FUNCTIONS
 // --------------------------------------------------------
@@ -173,5 +196,6 @@ export default {
   buyerLogout,
   getWishlistItems,
   payment,
+  updateBuyerProfile,
   // NOTE: Cart functions (addToCart, getCart) are defined and exported in cartController.js
 };
