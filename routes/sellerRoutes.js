@@ -35,7 +35,13 @@ router.get(
   isSeller,
   sellerController.getSellerProfile
 );
-router.post("/update-profile",authenticateToken,isSeller,sellerController.updateProfile)
+router.post(
+  "/update-profile",
+  authenticateToken,
+  isSeller,
+  uploadCloud.single("profileImage"),
+  sellerController.updateProfile
+);
 
 // 2. SELLER DASHBOARD STATS ROUTE (Analytics)
 // URL: /api/seller/dashboard

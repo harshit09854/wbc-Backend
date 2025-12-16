@@ -155,7 +155,7 @@ const getSellerProfile = async (req, res) => {
     const sellerProfile = await sellerModel
       .findById(sellerId)
       .select(
-        "name email businessName businessAddress businessDescription pincode phone"
+        "name email businessName businessAddress businessDescription pincode phone profileImage"
       );
 
     if (!sellerProfile) {
